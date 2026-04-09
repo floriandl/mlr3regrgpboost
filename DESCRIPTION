@@ -1,0 +1,25 @@
+Package: mlr3regrgpboost
+Type: Package
+Encoding: UTF-8
+Title: GPBoost Regression Learner for 'mlr3'
+Version: 2026.4.7
+Authors@R: c(
+    person("Florian", "Delage", email="floriandlg+mlr3@protonmail.com", role=c("aut", "cre")))
+Description: Provides a regression learner for the mlr3 machine learning
+    framework using the 'gpboost' package, which combines gradient boosting
+    with Gaussian process and mixed effects models.
+License: LGPL (>= 3)
+URL: https://github.com/floriandl/mlr3regrgpboost
+BugReports: https://github.com/floriandl/mlr3regrgpboost/issues
+Imports:
+    mlr3,
+    mlr3misc,
+    paradox,
+    R6,
+    gpboost
+Suggests:
+    testthat (>= 3.0.0),
+    mlr3learners
+Config/testthat/edition: 3
+RoxygenNote: 7.3.3
+NeedsCompilation: no
