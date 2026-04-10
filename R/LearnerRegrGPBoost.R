@@ -41,8 +41,6 @@ LearnerRegrGPBoost = R6::R6Class(
   private = list(
     .train = function(task) {
       pv = self$param_set$get_values(tags = "train")
-      nrounds = pv[["nrounds"]] %||% 100L
-      pv[["nrounds"]] = NULL
       
       X = data.matrix(task$data(cols = task$feature_names))
       y = task$truth()
@@ -50,11 +48,12 @@ LearnerRegrGPBoost = R6::R6Class(
 
       if (length(group_cols) == 2L) {
         coords = as.matrix(task$data(cols = group_cols))
-        gp_model = gpboost::GPModel(gp_coords = coords)
+        gp_model = gpboost::GPModel(gp_coords = coords, likelihood = "gaussian")
       } else if (length(group_cols) == 1L) {
         group_data = task$data(cols = group_cols)[[1L]]
-        gp_model = gpboost::GPModel(group_data = group_data)
+        gp_model = gpboost::GPModel(group_data = group_data, likelihood = "gaussian")
       } else {
+        # basic boosting algorithm
         gp_model = NULL
       }
 
@@ -63,8 +62,7 @@ LearnerRegrGPBoost = R6::R6Class(
         data = dataset,
         gp_model = gp_model,
         params = pv,
-        nrounds = nrounds,
-        verbose = -1L
+        verbose = 0
       )
     },
     .predict = function(task) {
@@ -81,8 +79,6 @@ LearnerRegrGPBoost = R6::R6Class(
       )
       response = if (is.list(preds) && "response_mean" %in% names(preds)) {
         preds[["response_mean"]]
-      } else if (is.list(preds) && length(preds) > 0L) {
-        preds[[which(sapply(preds, is.numeric))[1L]]]
       } else {
         as.numeric(preds)
       }
